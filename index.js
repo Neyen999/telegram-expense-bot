@@ -7,7 +7,7 @@ const { processMessage } = require('./src/natural_processing')
 // const commands = ["START", "SAVE_EXPENSE", "CONSULT_EXPENSE", "ADD_INITIAL_BALANCE"];
 
 // Configuración del bot
-const TOKEN = '7467651942:AAG2O5Z383NCDxQVc3XlWGn88eBdzXq4TA8';
+const TOKEN = process.env.TOKEN;
 const bot = new TelegramBot(TOKEN, {polling: true});
 
 // Conexión a la base de datos
