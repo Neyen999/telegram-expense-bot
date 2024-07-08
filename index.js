@@ -1,14 +1,14 @@
+const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 const Database = require('better-sqlite3');
-const natural = require('natural');
-const speech = require('@google-cloud/speech');
-const { processMessage } = require('./src/natural_processing')
+const { processMessage } = require('./natural_processing');
 
-// const commands = ["START", "SAVE_EXPENSE", "CONSULT_EXPENSE", "ADD_INITIAL_BALANCE"];
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 // Configuración del bot
-const TOKEN = process.env.TOKEN;
-const bot = new TelegramBot(TOKEN, {polling: true});
+const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const bot = new TelegramBot(TOKEN, { polling: true });
 
 // Conexión a la base de datos
 const db = new Database('expenses.db');
@@ -22,6 +22,13 @@ function saveTransaction(chatId, amount, type, description) {
     const stmt = db.prepare('INSERT INTO transactions (chat_id, date, type, amount, description) VALUES (?, ?, ?, ?, ?)');
     const info = stmt.run(chatId, new Date().toISOString(), type, amount, description);
     return info.changes > 0;
+}
+
+// Función para verificar si el usuario ha interactuado antes
+function hasInteracted(chatId) {
+    const stmt = db.prepare('SELECT COUNT(*) as count FROM transactions WHERE chat_id = ?');
+    const result = stmt.get(chatId);
+    return result.count > 0;
 }
 
 // Manejador de mensajes de texto
@@ -114,19 +121,14 @@ function getExpenses(chatId) {
     return stmt.all(chatId);
 }
 
-function hasInteracted(chatId) {
-  try {
-      const stmt = db.prepare(`
-          SELECT COUNT(*) as count
-          FROM transactions
-          WHERE chat_id = ?
-      `);
-      const result = stmt.get(chatId);
-      return result.count > 0;
-  } catch (error) {
-      console.error('Error checking interaction:', error.message);
-      return false; // Asumimos que no ha interactuado si hay un error
-  }
-}
-
 console.log('Bot is running...');
+
+// Ruta básica de Express
+app.get('/', (req, res) => {
+    res.send('NeyExpensesTracker está funcionando!');
+});
+
+// Iniciar el servidor Express
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
+});

@@ -12,6 +12,7 @@
   "dependencies": {
     "@google-cloud/speech": "^6.6.1",
     "better-sqlite3": "^11.1.2",
+    "express": "^4.19.2",
     "natural": "^7.0.7",
     "node-telegram-bot-api": "^0.66.0"
   }
