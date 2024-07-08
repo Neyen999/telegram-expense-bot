@@ -1,13 +1,13 @@
 const express = require('express');
 const TelegramBot = require('node-telegram-bot-api');
 const Database = require('better-sqlite3');
-const { processMessage } = require('./natural_processing');
+const { processMessage } = require('./src/natural_processing');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Configuración del bot
-const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TOKEN = process.env.TOKEN;
 const bot = new TelegramBot(TOKEN, { polling: true });
 
 // Conexión a la base de datos
