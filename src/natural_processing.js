@@ -4,6 +4,8 @@ const fs = require('fs');
 const tokenizer = new natural.WordTokenizer();
 let classifier = new natural.BayesClassifier();
 
+const CLASSIFIER_PATH = '/data/trained_classifier.json';
+
 // Función para entrenar y guardar el clasificador
 function trainAndSaveClassifier() {
   // Agregar todos los documentos de entrenamiento
@@ -22,7 +24,7 @@ function trainAndSaveClassifier() {
   classifier.train();
 
   // Guardar el clasificador entrenado
-  classifier.save('trained_classifier.json', function(err, classifier) {
+  classifier.save(CLASSIFIER_PATH, function(err, classifier) {
     if (err) {
       console.error(err);
     } else {
@@ -33,7 +35,7 @@ function trainAndSaveClassifier() {
 
 // Función para cargar el clasificador entrenado
 function loadClassifier(callback) {
-  natural.BayesClassifier.load('trained_classifier.json', null, function(err, loadedClassifier) {
+  natural.BayesClassifier.load(CLASSIFIER_PATH, null, function(err, loadedClassifier) {
     if (err) {
       console.error('Error al cargar el clasificador:', err);
       // Si hay un error al cargar, entrenamos y guardamos uno nuevo

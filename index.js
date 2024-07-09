@@ -6,12 +6,14 @@ const { processMessage } = require('./src/natural_processing');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const DB_PATH = '/data/expenses.db';
 // Configuración del bot
 const TOKEN = process.env.TOKEN;
 const bot = new TelegramBot(TOKEN, { polling: true });
 
 // Conexión a la base de datos
-const db = new Database('expenses.db');
+// const db = new Database('expenses.db');
+const db = new Database(DB_PATH);
 
 // Crear tabla si no existe
 db.exec(`CREATE TABLE IF NOT EXISTS transactions
